@@ -15,7 +15,7 @@ def print_parameter_query(fields:str, where:str, parameter):
     """ Prints the results for a parameter query in tabular form. """
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    sql = ("SELECT " + fields + " FROM " + TABLES + " WHERE " + where)
+    sql = (" " + fields + " FROM " + TABLES + " WHERE " + where)
     cursor.execute(sql,(parameter,))
     results = cursor.fetchall()
     print(tabulate(results,fields.split(",")))

@@ -3,7 +3,7 @@ import sqlite3
 from tabulate import tabulate
 
 # This is the filename of the database to be used
-DB_NAME = 'fast_car_relational.db'
+DB_NAME = 'cousin_music.db'
 
 def print_query(view_name:str):
     ''' Prints the specified view from the database in a table '''
@@ -22,10 +22,11 @@ def print_query(view_name:str):
     print(tabulate(results,headings))
     db.close()
 
-TABLES = (" fast_car "
-            "LEFT JOIN makes ON fast_car.make_id = makes.make_id "
-            "LEFT JOIN aspiration ON fast_car.aspiration_id = aspiration.aspiration_id "
-            "LEFT JOIN cylinders ON fast_car.cylinders_id = cylinders.cylinder_id ")
+TABLES = (" cousin_music "
+            "LEFT JOIN instrument ON cousin_music.instrument_id = instrument.instrument_id "
+            "LEFT JOIN gender ON cousin_music.gender_id = gender.gender_id "
+            "LEFT JOIN school ON cousin_music.school_id = school.school_id "
+            "LEFT JOIN day ON cousin_music.day_id = day.day_id ")
 
 
 def print_parameter_query(fields:str, where:str, parameter):
@@ -40,29 +41,23 @@ def print_parameter_query(fields:str, where:str, parameter):
 
 menu_choice =''
 while menu_choice != 'Z':
-    menu_choice = input('Welcome to the Cars database\n\n'
+    menu_choice = input('Welcome to the Music lessons database\n\n'
                         'Type the letter for the information you want:\n'
-                        'A: Fastest 0 to 60 and top speed > 245\n'
-                        'B: Higher torque\n'
-                        'C: V-12 engine and naturally aspirated\n'
-                        'D: horsepower > 900\n'
-                        'E: price greater than 2.5 million and engine capacity greater than 2L\n'
-                        'F: price less than 2m\n'
-                        'G: chose your own car make\n'
+                        'A: All data\n'
+                        'B: Lessons on Monday\n'
+                        'C: Lessons on Wednesday\n'
+                        'D: People that owe money and amount owed\n'
+                        'G: Get info of a specific person\n'
                         'Z: Exit\n\nType option here: ')
+    menu_choice = menu_choice.upper()
     if menu_choice == 'A':
-        print_query('0to60 and speed 245+')
+        print_query('all_data')
     elif menu_choice == 'B':
-        print_query('>torque')
+        print_query('lesson_monday')
     elif menu_choice == 'C':
-        print_query('V-12 engine and naturally aspirated')
+        print_query('lesson_wednesday')
     elif menu_choice == 'D':
-        print_query('horsepower > 900')
-    elif menu_choice == 'E':
-        print_query('price greater than 2.5 million and engine capacity greater than 2L')
-    elif menu_choice == 'F':
-        print_query('price less than 2m')
+        print_query('not_paid')
     elif menu_choice == 'G':
-        make = input('Which make cars do you want to see: ')
-        print_parameter_query("model, top_speed",  "make = ? ORDER BY top_speed DESC",make)
-
+        first_name = input("Which child's info do you want to see: ")
+        print_parameter_query("first_name, gender, school, instrument, day, lesson_time",  "first_name = ?",first_name)
