@@ -39,19 +39,18 @@ def print_parameter_query(fields:str, where:str, parameter):
     print(tabulate(results,fields.split(",")))
     db.close()  
 
+new_students = []
+
 menu_choice =''
 while menu_choice != 'Z':
     menu_choice = input('Welcome to the Music lessons database\n\n'
                         'Type the letter for the information you want:\n'
                         'A: All data\n'
                         'B: Lessons on Monday\n'
-                        'C: Lessons on Tuesday\n'
-                        'D: Lessons on Wednesday\n'
-                        'E: Lessons on Thursday\n'
-                        'F: Lessons on Friday\n'
-                        'G: People that owe money and amount owed\n'
-                        'H: The total amount of money owed\n'
-                        'I: Get info of a specific person\n'
+                        'C: Lessons on Wednesday\n'
+                        'D: People that owe money and amount owed\n'
+                        'G: Get info of a specific person\n'
+                        'J: Add data for a new person.\n'
                         'Z: Exit\n\nType option here: ')
     menu_choice = menu_choice.upper()
     if menu_choice == 'A':
@@ -59,17 +58,43 @@ while menu_choice != 'Z':
     elif menu_choice == 'B':
         print_query('lesson_monday')
     elif menu_choice == 'C':
-        print_query('lesson_tuesday')   
-    elif menu_choice == 'D':    
         print_query('lesson_wednesday')
-    elif menu_choice == 'E':
-        print_query('lesson_thursday')
-    elif menu_choice == 'F':
-        print_query('lesson_friday')
-    elif menu_choice == 'G':
+    elif menu_choice == 'D':
         print_query('not_paid')
-    elif menu_choice == 'H':
-        print_query('total_owed')
-    elif menu_choice == 'I':
-        first_name = input("Which child's info do you want to see: ")
-        print_parameter_query("first_name, gender, school, instrument, day, lesson_time",  "first_name = ?",first_name)
+    elif menu_choice == 'G':
+        name = input("Which child's info do you want to see: ")
+        print_parameter_query("first_name, gender, school, instrument, day, lesson_time",  "first_name = ?",name)
+    elif menu_choice == 'J':
+        db = sqlite3.connect(DB_NAME)
+        cursor = db.cursor()
+        first_name = input("Student's first name: ")
+        new_students.append(first_name)
+        last_name = input("Student's last name: ")
+        new_students.append(last_name)
+        gender_id = int(input("Student's gender id number: "))
+        new_students.append(gender_id)
+        dob = input("Student's date of birth - type in DOB in form YYYY-MM-DD: ")
+        new_students.append(dob)
+        instrument_id = int(input("Student's instrument id number: "))
+        new_students.append(instrument_id)
+        school_id = int(input("Student's school - enter abbreviation eg - LMS : "))
+        new_students.append(school_id)
+        day_id = int(input("Day of lesson - give full word eg - Monday: "))
+        new_students.append(day_id)
+        lesson_time = input("Lesson time, give in 24 hour time: ")
+        new_students.append(lesson_time)
+        parent_name = input("Parent first name: ")
+        new_students.append(parent_name)
+        parent_last = input("Parent last name: ")
+        new_students.append(parent_last)
+        parent_phone = int(input("Parent phone number, no spaces: "))
+        new_students.append(parent_phone)
+        paid = int(input('Amount already paid: '))
+        new_students.append(paid)
+        a =  '''INSERT INTO cousin_music(first_name, last_name, gender_id, dob, instrument_id,
+                     school_id, day_id, lesson_time, parent_name, parent_last, parent_phone, paid) 
+                     VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
+        
+        cursor.execute(a, new_students)
+        db.commit()  
+        db.close()
